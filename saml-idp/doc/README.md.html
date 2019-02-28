@@ -1,0 +1,577 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>README.md</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <link rel="stylesheet" media="all" href="doc-style.css" />
+  <script src="doc-filelist.js"></script>
+  <script>
+    var relativeDir = "";
+    var thisFile = "README.md";
+    var defaultSidebar = true;
+  </script>
+  <script src="doc-script.js"></script>
+
+</head>
+<body>
+  <div id="sidebar_wrapper">
+    <div id="sidebar_switch">
+      <span class="tree">Files</span>
+      <span class="headings">Headings</span>
+    </div>
+    <div id="tree"></div>
+    <div id="headings">
+
+      <div class="heading h1">
+        <a href="#introduction">Introduction</a>
+      </div>
+
+      <div class="heading h2">
+        <a href="#installation">Installation</a>
+      </div>
+
+      <div class="heading h3">
+        <a href="#global-command-line-tool">Global Command Line Tool</a>
+      </div>
+
+      <div class="heading h3">
+        <a href="#manual">Manual</a>
+      </div>
+
+      <div class="heading h3">
+        <a href="#library">Library</a>
+      </div>
+
+      <div class="heading h3">
+        <a href="#docker">Docker</a>
+      </div>
+
+      <div class="heading h2">
+        <a href="#generating-idp-signing-certificate">Generating IdP Signing Certificate</a>
+      </div>
+
+      <div class="heading h2">
+        <a href="#usage">Usage</a>
+      </div>
+
+      <div class="heading h3">
+        <a href="#library-1">Library</a>
+      </div>
+
+      <div class="heading h4">
+        <a href="#custom-user-config-claims">Custom user config (claims)</a>
+      </div>
+
+      <div class="heading h3">
+        <a href="#command-line">Command Line</a>
+      </div>
+
+      <div class="heading h4">
+        <a href="#sso-profile">SSO Profile</a>
+      </div>
+
+      <div class="heading h4">
+        <a href="#sso-and-slo-profile">SSO &amp;amp; SLO Profile</a>
+      </div>
+
+      <div class="heading h4">
+        <a href="#example">Example</a>
+      </div>
+
+      <div class="heading h4">
+        <a href="#options">Options</a>
+      </div>
+
+      <div class="heading h1">
+        <a href="#idp-saml-settings">IdP SAML Settings</a>
+      </div>
+
+      <div class="heading h2">
+        <a href="#issuer">Issuer</a>
+      </div>
+
+      <div class="heading h2">
+        <a href="#signing-certificate">Signing Certificate</a>
+      </div>
+
+      <div class="heading h3">
+        <a href="#passing-keycert-pairs-from-environment-variables">Passing key/cert pairs from environment variables</a>
+      </div>
+
+      <div class="heading h2">
+        <a href="#single-sign-on-service-binding">Single Sign-On Service Binding</a>
+      </div>
+
+      <div class="heading h2">
+        <a href="#single-logout-service-binding">Single Logout Service Binding</a>
+      </div>
+
+      <div class="heading h2">
+        <a href="#saml-metadata">SAML Metadata</a>
+      </div>
+
+      <div class="heading h2">
+        <a href="#assertion-attributes">Assertion Attributes</a>
+      </div>
+
+      <div class="heading h4">
+        <a href="#profile-property">Profile Property</a>
+      </div>
+
+      <div class="heading h4">
+        <a href="#metadata-entry">Metadata Entry</a>
+      </div>
+
+      <div class="heading h4">
+        <a href="#saml-assertion-attribute-statement">SAML Assertion Attribute Statement</a>
+      </div>
+
+      <div class="heading h3">
+        <a href="#default-attributes">Default Attributes</a>
+      </div>
+
+      <div class="heading h3">
+        <a href="#custom-attributes">Custom Attributes</a>
+      </div>
+
+      <div class="heading h2">
+        <a href="#assertion-encryption">Assertion Encryption</a>
+      </div>
+
+      <div class="heading h3">
+        <a href="#der-to-pem">DER to PEM</a>
+      </div>
+
+      <div class="heading h3">
+        <a href="#pem-certificate-to-public-key">PEM Certificate to Public Key</a>
+      </div>
+
+    </div>
+  </div>
+  <div id="sidebar-toggle"></div>
+  <div id="container">
+    <div class="docs markdown"><div class="pilwrap" id="introduction">
+  <h1>
+    <a href="#introduction" name="introduction" class="pilcrow"></a>
+Introduction
+  </h1>
+</div>
+<p>This app provides a simple SAML Identity Provider (IdP) to test SAML 2.0 Service Providers (SPs) with the <a href="http://en.wikipedia.org/wiki/SAML_2.0#Web_Browser_SSO_Profile">SAML 2.0 Web Browser SSO Profile</a> or the Single Logout Profile.</p>
+<blockquote>
+<p><strong>This sample is not intended for use with production systems!</strong></p>
+</blockquote>
+<div class="pilwrap" id="installation">
+  <h2>
+    <a href="#installation" name="installation" class="pilcrow"></a>
+Installation
+  </h2>
+</div>
+<div class="pilwrap" id="global-command-line-tool">
+  <h3>
+    <a href="#global-command-line-tool" name="global-command-line-tool" class="pilcrow"></a>
+Global Command Line Tool
+  </h3>
+</div>
+<pre><code class="shell">npm install --global saml-idp
+</code></pre>
+<div class="pilwrap" id="manual">
+  <h3>
+    <a href="#manual" name="manual" class="pilcrow"></a>
+Manual
+  </h3>
+</div>
+<p>From inside a local copy of this repo</p>
+<pre><code class="shell">npm install
+<span class="hljs-meta">#</span><span class="bash"> or</span>
+npm link
+</code></pre>
+<div class="pilwrap" id="library">
+  <h3>
+    <a href="#library" name="library" class="pilcrow"></a>
+Library
+  </h3>
+</div>
+<pre><code class="shell">npm install saml-idp
+</code></pre>
+<div class="pilwrap" id="docker">
+  <h3>
+    <a href="#docker" name="docker" class="pilcrow"></a>
+Docker
+  </h3>
+</div>
+<ol>
+<li>docker-compose build</li>
+<li>docker-compose up</li>
+</ol>
+<p>Simply modify Dockerfile to specify your own parameters.</p>
+<div class="pilwrap" id="generating-idp-signing-certificate">
+  <h2>
+    <a href="#generating-idp-signing-certificate" name="generating-idp-signing-certificate" class="pilcrow"></a>
+Generating IdP Signing Certificate
+  </h2>
+</div>
+<p>You must generate a self-signed certificate for the IdP.</p>
+<blockquote>
+<p>The private key should be unique to your test IdP and not shared!</p>
+</blockquote>
+<p>You can generate a keypair using the following command (requires openssl in your path):</p>
+<pre><code class="shell">openssl req -x509 -new -newkey rsa:2048 -nodes -subj '/C=US/ST=California/L=San Francisco/O=JankyCo/CN=Test Identity Provider' -keyout idp-private-key.pem -out idp-public-cert.pem -days 7300
+</code></pre>
+<div class="pilwrap" id="usage">
+  <h2>
+    <a href="#usage" name="usage" class="pilcrow"></a>
+Usage
+  </h2>
+</div>
+<div class="pilwrap" id="library-1">
+  <h3>
+    <a href="#library-1" name="library-1" class="pilcrow"></a>
+Library
+  </h3>
+</div>
+<p>An IdP server can be started using the exported <code>runServer</code> function. <code>runServer</code> accepts a config object which matches the interface of the <code>saml-idp</code> command.</p>
+<pre><code class="javascript"><span class="hljs-keyword">const</span> {runServer} = <span class="hljs-built_in">require</span>(<span class="hljs-string">'saml-idp'</span>);
+
+runServer({
+  <span class="hljs-attr">acsUrl</span>: <span class="hljs-string">`https://foo.okta.com/auth/saml20/assertion-consumer`</span>,
+  <span class="hljs-attr">audience</span>: <span class="hljs-string">`https://foo.okta.com/auth/saml20/metadata`</span>,
+});
+</code></pre>
+<div class="pilwrap" id="custom-user-config-claims">
+  <h4>
+    <a href="#custom-user-config-claims" name="custom-user-config-claims" class="pilcrow"></a>
+Custom user config (claims)
+  </h4>
+</div>
+<pre><code class="javascript"><span class="hljs-keyword">const</span> {runServer} = <span class="hljs-built_in">require</span>(<span class="hljs-string">'saml-idp'</span>);
+
+runServer({
+  <span class="hljs-attr">acsUrl</span>: <span class="hljs-string">`https://foo.okta.com/auth/saml20/assertion-consumer`</span>,
+  <span class="hljs-attr">audience</span>: <span class="hljs-string">`https://foo.okta.com/auth/saml20/metadata`</span>,
+  <span class="hljs-attr">config</span>: {
+    <span class="hljs-attr">user</span>: userDefaults,
+    <span class="hljs-comment">// The auth-service requires at least one AttributeStatement in the SAML assertion.</span>
+    metadata: [{
+      <span class="hljs-attr">id</span>: <span class="hljs-string">'email'</span>,
+      <span class="hljs-attr">optional</span>: <span class="hljs-literal">false</span>,
+      <span class="hljs-attr">displayName</span>: <span class="hljs-string">'E-Mail Address'</span>,
+      <span class="hljs-attr">description</span>: <span class="hljs-string">'The e-mail address of the user'</span>,
+      <span class="hljs-attr">multiValue</span>: <span class="hljs-literal">false</span>
+    }, {
+      <span class="hljs-attr">id</span>: <span class="hljs-string">"userType"</span>,
+      <span class="hljs-attr">optional</span>: <span class="hljs-literal">true</span>,
+      <span class="hljs-attr">displayName</span>: <span class="hljs-string">'User Type'</span>,
+      <span class="hljs-attr">description</span>: <span class="hljs-string">'The type of user'</span>,
+      <span class="hljs-attr">options</span>: [<span class="hljs-string">'Admin'</span>, <span class="hljs-string">'Editor'</span>, <span class="hljs-string">'Commenter'</span>]
+    }],
+    <span class="hljs-attr">user</span>: {
+      <span class="hljs-attr">email</span>: <span class="hljs-string">'saml.jackson@example.com'</span>,
+    },
+  },
+});
+</code></pre>
+<div class="pilwrap" id="command-line">
+  <h3>
+    <a href="#command-line" name="command-line" class="pilcrow"></a>
+Command Line
+  </h3>
+</div>
+<div class="pilwrap" id="sso-profile">
+  <h4>
+    <a href="#sso-profile" name="sso-profile" class="pilcrow"></a>
+SSO Profile
+  </h4>
+</div>
+<pre><code class="shell">saml-idp --acs {POST URL} --aud {audience}
+</code></pre>
+<div class="pilwrap" id="sso-and-slo-profile">
+  <h4>
+    <a href="#sso-and-slo-profile" name="sso-and-slo-profile" class="pilcrow"></a>
+SSO &amp; SLO Profile
+  </h4>
+</div>
+<pre><code>saml-idp --acs {POST URL} --slo {POST URL} --aud {audience}
+</code></pre>
+<p>Open <code>http://localhost:7000</code> in your browser to start an IdP initiated flow to your SP</p>
+<div class="pilwrap" id="example">
+  <h4>
+    <a href="#example" name="example" class="pilcrow"></a>
+Example
+  </h4>
+</div>
+<pre><code>saml-idp --acs https://foo.okta.com/auth/saml20/example --aud https://www.okta.com/saml2/service-provider/spf5aFRRXFGIMAYXQPNV
+</code></pre>
+<div class="pilwrap" id="options">
+  <h4>
+    <a href="#options" name="options" class="pilcrow"></a>
+Options
+  </h4>
+</div>
+<p>Most parameters can be defined with the following command-line arguments:</p>
+<pre><code>Options:
+  --help                            Show help                                                                                                                              [boolean]
+  --version                         Show version number                                                                                                                    [boolean]
+  --settings                        Path to JSON config file
+  --port, -p                        IdP Web Server Listener Port                                                                                          [required] [default: 7000]
+  --cert                            IdP Signature PublicKey Certificate                                                                [required] [default: &quot;./idp-public-cert.pem&quot;]
+  --key                             IdP Signature PrivateKey Certificate                                                               [required] [default: &quot;./idp-private-key.pem&quot;]
+  --issuer, --iss                   IdP Issuer URI                                                                                           [required] [default: &quot;urn:example:idp&quot;]
+  --acsUrl, --acs                   SP Assertion Consumer URL                                                                                                             [required]
+  --sloUrl, --slo                   SP Single Logout URL
+  --audience, --aud                 SP Audience URI                                                                                                                       [required]
+  --serviceProviderId, --spId       SP Issuer/Entity URI                                                                                                                    [string]
+  --relayState, --rs                Default SAML RelayState for SAMLResponse
+  --disableRequestAcsUrl, --static  Disables ability for SP AuthnRequest to specify Assertion Consumer URL                                                [boolean] [default: false]
+  --encryptAssertion, --enc         Encrypts assertion with SP Public Key                                                                                 [boolean] [default: false]
+  --encryptionCert, --encCert       SP Certificate (pem) for Assertion Encryption                                                                                           [string]
+  --encryptionPublicKey, --encKey   SP RSA Public Key (pem) for Assertion Encryption (e.g. openssl x509 -pubkey -noout -in sp-cert.pem)                                     [string]
+  --httpsPrivateKey                 Web Server TLS/SSL Private Key (pem)                                                                                                    [string]
+  --httpsCert                       Web Server TLS/SSL Certificate (pem)                                                                                                    [string]
+  --https                           Enables HTTPS Listener (requires httpsPrivateKey and httpsCert)                                            [boolean] [required] [default: false]
+  --configFile, --conf              Path to a SAML attribute config file                                                  [required] [default: &quot;/Users/karl/src/saml-idp/config.js&quot;]
+  --rollSession                     Create a new session for every authn request instead of reusing an existing session                                   [boolean] [default: false]
+  --authnContextClassRef, --acr     Authentication Context Class Reference                   [string] [default: &quot;urn:oasis:names:tc:SAML:2.0:ac:classes:PasswordProtectedTransport&quot;]
+  --authnContextDecl, --acd         Authentication Context Declaration (XML FilePath)                                                                                       [string]
+</code></pre>
+<div class="pilwrap" id="idp-saml-settings">
+  <h1>
+    <a href="#idp-saml-settings" name="idp-saml-settings" class="pilcrow"></a>
+IdP SAML Settings
+  </h1>
+</div>
+<div class="pilwrap" id="issuer">
+  <h2>
+    <a href="#issuer" name="issuer" class="pilcrow"></a>
+Issuer
+  </h2>
+</div>
+<p>The default IdP issuer is <code>urn:example:idp</code>.  You can change this with the <code>--iss</code> argument.</p>
+<div class="pilwrap" id="signing-certificate">
+  <h2>
+    <a href="#signing-certificate" name="signing-certificate" class="pilcrow"></a>
+Signing Certificate
+  </h2>
+</div>
+<p>The signing certificate public key must be specified as a file path or PEM string using the <code>cert</code> argument</p>
+<p>The signing certificate private key must be specified as a file path or PEM string using the <code>key</code> argument</p>
+<div class="pilwrap" id="passing-keycert-pairs-from-environment-variables">
+  <h3>
+    <a href="#passing-keycert-pairs-from-environment-variables" name="passing-keycert-pairs-from-environment-variables" class="pilcrow"></a>
+Passing key/cert pairs from environment variables
+  </h3>
+</div>
+<p>Signing certificate key/cert pairs can also be passed from environment variables.</p>
+<pre><code>saml-idp --acs {POST URL} --aud {audience} --cert=&quot;$SAML_CERT&quot; --key=&quot;$SAML_KEY&quot;
+</code></pre>
+<div class="pilwrap" id="single-sign-on-service-binding">
+  <h2>
+    <a href="#single-sign-on-service-binding" name="single-sign-on-service-binding" class="pilcrow"></a>
+Single Sign-On Service Binding
+  </h2>
+</div>
+<p>Both SSO POST and Redirect bindings are available on the same endpoint which by default is <code>http://localhost:7000/saml/sso</code></p>
+<table>
+<thead>
+<tr>
+<th>Binding</th>
+<th>URL</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>HTTP-Redirect</td>
+<td><code>http://localhost:port/saml/sso</code></td>
+</tr>
+<tr>
+<td>HTTP-POST</td>
+<td><code>http://localhost:port/saml/sso</code></td>
+</tr>
+</tbody>
+</table>
+<div class="pilwrap" id="single-logout-service-binding">
+  <h2>
+    <a href="#single-logout-service-binding" name="single-logout-service-binding" class="pilcrow"></a>
+Single Logout Service Binding
+  </h2>
+</div>
+<p>Both SSO POST and Redirect bindings are available on the same endpoint which by default is <code>http://localhost:7000/saml/slo</code></p>
+<table>
+<thead>
+<tr>
+<th>Binding</th>
+<th>URL</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>HTTP-Redirect</td>
+<td><code>http://localhost:port/saml/slo</code></td>
+</tr>
+<tr>
+<td>HTTP-POST</td>
+<td><code>http://localhost:port/saml/slo</code></td>
+</tr>
+</tbody>
+</table>
+<div class="pilwrap" id="saml-metadata">
+  <h2>
+    <a href="#saml-metadata" name="saml-metadata" class="pilcrow"></a>
+SAML Metadata
+  </h2>
+</div>
+<p>IdP SAML metadata is available on <code>http://localhost:port/metadata</code></p>
+<div class="pilwrap" id="assertion-attributes">
+  <h2>
+    <a href="#assertion-attributes" name="assertion-attributes" class="pilcrow"></a>
+Assertion Attributes
+  </h2>
+</div>
+<p>The IdP mints the user's profile as a SAML Assertion Attribute Statement using the <code>metadata</code> property in <code>config.js</code>.  Profile properties that match a metadata entry <code>id</code> property will be generated as a SAML Attribute with the same name.  The IdP UI will automatically render an input for each entry defined via a <code>metadata</code> entry in <code>config.js</code> with a default value from the matching <code>profile</code> property.</p>
+<div class="pilwrap" id="profile-property">
+  <h4>
+    <a href="#profile-property" name="profile-property" class="pilcrow"></a>
+Profile Property
+  </h4>
+</div>
+<pre><code class="json">{
+  <span class="hljs-attr">"email"</span>: <span class="hljs-string">"saml.jackson@example.com"</span>
+}
+</code></pre>
+<div class="pilwrap" id="metadata-entry">
+  <h4>
+    <a href="#metadata-entry" name="metadata-entry" class="pilcrow"></a>
+Metadata Entry
+  </h4>
+</div>
+<pre><code class="json">{
+  <span class="hljs-attr">"id"</span>: <span class="hljs-string">"email"</span>,
+  <span class="hljs-attr">"optional"</span>: <span class="hljs-literal">false</span>,
+  <span class="hljs-attr">"displayName"</span>: <span class="hljs-string">"E-Mail Address"</span>,
+  <span class="hljs-attr">"description"</span>: <span class="hljs-string">"The e-mail address of the user"</span>,
+  <span class="hljs-attr">"multiValue"</span>: <span class="hljs-literal">false</span>
+}
+</code></pre>
+<div class="pilwrap" id="saml-assertion-attribute-statement">
+  <h4>
+    <a href="#saml-assertion-attribute-statement" name="saml-assertion-attribute-statement" class="pilcrow"></a>
+SAML Assertion Attribute Statement
+  </h4>
+</div>
+<pre><code class="xml"><span class="hljs-tag">&lt;<span class="hljs-name">saml:Attribute</span> <span class="hljs-attr">Name</span>=<span class="hljs-string">"email"</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">saml:AttributeValue</span> <span class="hljs-attr">xsi:type</span>=<span class="hljs-string">"xs:anyType"</span>&gt;</span>saml.jackson@example.com<span class="hljs-tag">&lt;/<span class="hljs-name">saml:AttributeValue</span>&gt;</span>
+</code></pre>
+<div class="pilwrap" id="default-attributes">
+  <h3>
+    <a href="#default-attributes" name="default-attributes" class="pilcrow"></a>
+Default Attributes
+  </h3>
+</div>
+<p>The default profile mappings are defined in <code>config.js</code> as:</p>
+<table>
+<thead>
+<tr>
+<th>Profile Property</th>
+<th>SAML Attribute Name</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>userName</td>
+<td>Subject NameID</td>
+</tr>
+<tr>
+<td>nameIdFormat</td>
+<td>Subject NameID Format</td>
+</tr>
+<tr>
+<td>nameIdNameQualifier</td>
+<td>Subject NameID Name Qualifer</td>
+</tr>
+<tr>
+<td>nameIdSPNameQualifier</td>
+<td>Subject NameID SP Name Qualifer</td>
+</tr>
+<tr>
+<td>nameIdSPProvidedID</td>
+<td>Subject NameID SP ProvidedID</td>
+</tr>
+<tr>
+<td>firstName</td>
+<td><code>firstName</code></td>
+</tr>
+<tr>
+<td>lastName</td>
+<td><code>lastName</code></td>
+</tr>
+<tr>
+<td>displayName</td>
+<td><code>displayName</code></td>
+</tr>
+<tr>
+<td>email</td>
+<td><code>email</code></td>
+</tr>
+<tr>
+<td>mobilePhone</td>
+<td><code>mobilePhone</code></td>
+</tr>
+<tr>
+<td>groups</td>
+<td><code>groups</code></td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>SAML attribute mappings currently default to <a href="developer.okta.com.html">Okta (Inbound SAML)</a></p>
+</blockquote>
+<div class="pilwrap" id="custom-attributes">
+  <h3>
+    <a href="#custom-attributes" name="custom-attributes" class="pilcrow"></a>
+Custom Attributes
+  </h3>
+</div>
+<p>New attributes can be defined at runtime in the IdP UI or statically by modifying the <code>profile</code> and <code>metadata</code> objects in <code>config.js</code>.</p>
+<ol>
+<li>
+<p>Add metadata entry for your new attributes.  The <code>id</code> property must be the name of the SAML Attribute</p>
+<pre><code class="json">{
+  <span class="hljs-attr">"id"</span>: <span class="hljs-string">"customAttribute"</span>,
+  <span class="hljs-attr">"optional"</span>: <span class="hljs-literal">false</span>,
+  <span class="hljs-attr">"displayName"</span>: <span class="hljs-string">"Custom Attribute"</span>,
+  <span class="hljs-attr">"description"</span>: <span class="hljs-string">"My custom attribute"</span>,
+  <span class="hljs-attr">"multiValue"</span>: <span class="hljs-literal">false</span>
+}
+</code></pre>
+</li>
+<li>
+<p>Optionally add a default profile attribute value that will be used on startup</p>
+</li>
+</ol>
+<div class="pilwrap" id="assertion-encryption">
+  <h2>
+    <a href="#assertion-encryption" name="assertion-encryption" class="pilcrow"></a>
+Assertion Encryption
+  </h2>
+</div>
+<p>Encrypted assertions require both a certificate and public key from the target service provider in the PEM format (base64 encoding of <code>.der</code>, <code>.cer</code>, <code>.cert</code>, <code>.crt</code>).  You can convert certificate formats with <code>openssl</code></p>
+<div class="pilwrap" id="der-to-pem">
+  <h3>
+    <a href="#der-to-pem" name="der-to-pem" class="pilcrow"></a>
+DER to PEM
+  </h3>
+</div>
+<p><code>openssl x509 -inform der -in to-convert.der -out converted.pem</code></p>
+<blockquote>
+<p>The following formats or extensions should be convertible to the pem format: <code>.der</code>, <code>.cer</code>, <code>.cert</code>, `.crt</p>
+</blockquote>
+<div class="pilwrap" id="pem-certificate-to-public-key">
+  <h3>
+    <a href="#pem-certificate-to-public-key" name="pem-certificate-to-public-key" class="pilcrow"></a>
+PEM Certificate to Public Key
+  </h3>
+</div>
+<p>PEM files that contain the header <code>-----BEGIN CERTIFICATE-----</code> can also be converted to just the public key which is a file with just the <code>-----BEGIN PUBLIC KEY-----</code> header</p>
+<p><code>openssl x509 -pubkey -noout -in cert.pem &gt; pub.key</code></p>
+</div>
+  </div>
+</body>
+</html>

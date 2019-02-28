@@ -1,0 +1,1116 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>app.js</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <link rel="stylesheet" media="all" href="doc-style.css" />
+  <script src="doc-filelist.js"></script>
+  <script>
+    var relativeDir = "";
+    var thisFile = "app.js";
+    var defaultSidebar = true;
+  </script>
+  <script src="doc-script.js"></script>
+
+</head>
+<body>
+  <div id="sidebar_wrapper">
+    <div id="sidebar_switch">
+      <span class="tree">Files</span>
+      <span class="headings">Headings</span>
+    </div>
+    <div id="tree"></div>
+    <div id="headings">
+
+    </div>
+  </div>
+  <div id="sidebar-toggle"></div>
+  <div id="container">
+    <div class="background highlight"></div>
+<table cellpadding="0" cellspacing="0">
+  <tbody>
+    
+      <tr>
+        <td class="docs">
+          <h1>app.js</h1>
+        </td>
+        <td class="code highlight"></td>
+      </tr>
+    
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-1" id="section-1"></a>
+</div>
+<div class="dox">
+<div class="summary">
+<p>Module dependencies.</p>
+</div>
+<div class="body">
+</div>
+</div>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript">
+<span class="hljs-keyword">const</span> express             = <span class="hljs-built_in">require</span>(<span class="hljs-string">'express'</span>),
+      os                  = <span class="hljs-built_in">require</span>(<span class="hljs-string">'os'</span>),
+      fs                  = <span class="hljs-built_in">require</span>(<span class="hljs-string">'fs'</span>),
+      http                = <span class="hljs-built_in">require</span>(<span class="hljs-string">'http'</span>),
+      https               = <span class="hljs-built_in">require</span>(<span class="hljs-string">'https'</span>),
+      path                = <span class="hljs-built_in">require</span>(<span class="hljs-string">'path'</span>),
+      extend              = <span class="hljs-built_in">require</span>(<span class="hljs-string">'extend'</span>),
+      hbs                 = <span class="hljs-built_in">require</span>(<span class="hljs-string">'hbs'</span>),
+      logger              = <span class="hljs-built_in">require</span>(<span class="hljs-string">'morgan'</span>),
+      bodyParser          = <span class="hljs-built_in">require</span>(<span class="hljs-string">'body-parser'</span>),
+      session             = <span class="hljs-built_in">require</span>(<span class="hljs-string">'express-session'</span>),
+      yargs               = <span class="hljs-built_in">require</span>(<span class="hljs-string">'yargs/yargs'</span>),
+      xmlFormat           = <span class="hljs-built_in">require</span>(<span class="hljs-string">'xml-formatter'</span>),
+      samlp               = <span class="hljs-built_in">require</span>(<span class="hljs-string">'samlp'</span>),
+      Parser              = <span class="hljs-built_in">require</span>(<span class="hljs-string">'xmldom'</span>).DOMParser,
+      SessionParticipants = <span class="hljs-built_in">require</span>(<span class="hljs-string">'samlp/lib/sessionParticipants'</span>),
+      SimpleProfileMapper = <span class="hljs-built_in">require</span>(<span class="hljs-string">'./lib/simpleProfileMapper.js'</span>);
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-2" id="section-2"></a>
+</div>
+<div class="dox">
+<div class="summary">
+<p>Globals</p>
+</div>
+<div class="body">
+</div>
+</div>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript">
+<span class="hljs-keyword">const</span> IDP_PATHS = {
+  <span class="hljs-attr">SSO</span>: <span class="hljs-string">'/saml/sso'</span>,
+  <span class="hljs-attr">SLO</span>: <span class="hljs-string">'/saml/slo'</span>,
+  <span class="hljs-attr">METADATA</span>: <span class="hljs-string">'/metadata'</span>,
+  <span class="hljs-attr">SIGN_IN</span>: <span class="hljs-string">'/signin'</span>,
+  <span class="hljs-attr">SIGN_OUT</span>: <span class="hljs-string">'/signout'</span>,
+  <span class="hljs-attr">SETTINGS</span>: <span class="hljs-string">'/settings'</span>
+}
+
+<span class="hljs-keyword">const</span> cryptTypes           = {
+      <span class="hljs-attr">certificate</span>: <span class="hljs-regexp">/-----BEGIN CERTIFICATE-----[^-]*-----END CERTIFICATE-----/</span>,
+      <span class="hljs-string">'RSA private key'</span>: <span class="hljs-regexp">/-----BEGIN RSA PRIVATE KEY-----\n[^-]*\n-----END RSA PRIVATE KEY-----/</span>,
+      <span class="hljs-string">'public key'</span>: <span class="hljs-regexp">/-----BEGIN PUBLIC KEY-----\n[^-]*\n-----END PUBLIC KEY-----/</span>,
+    },
+    KEY_CERT_HELP_TEXT = <span class="hljs-string">"Please generate a key-pair for the IdP using the following openssl command:\n"</span> +
+      <span class="hljs-string">"\topenssl req -x509 -new -newkey rsa:2048 -nodes -subj '/C=US/ST=California/L=San Francisco/O=JankyCo/CN=Test Identity Provider' -keyout idp-private-key.pem -out idp-public-cert.pem -days 7300"</span>;
+
+
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">matchesCertType</span>(<span class="hljs-params">value, type</span>) </span>{
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-3" id="section-3"></a>
+</div>
+<p>console.info(<code>Testing ${cryptTypes[type].toString()} against &quot;${value}&quot;</code>);
+console.info(<code>result: ${cryptTypes[type] &amp;&amp; cryptTypes[type].test(value)}</code>);</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript">  <span class="hljs-keyword">return</span> cryptTypes[type] &amp;&amp; cryptTypes[type].test(value);
+}
+
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">bufferFromString</span>(<span class="hljs-params">value</span>) </span>{
+  <span class="hljs-keyword">if</span> (Buffer.hasOwnProperty(<span class="hljs-string">'from'</span>)) {
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-4" id="section-4"></a>
+</div>
+<p>node 6+</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript">    <span class="hljs-keyword">return</span> Buffer.from(value);
+  } <span class="hljs-keyword">else</span> {
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> Buffer(value);
+  }
+}
+
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">resolveFilePath</span>(<span class="hljs-params">filePath</span>) </span>{
+  <span class="hljs-keyword">var</span> possiblePath;
+  <span class="hljs-keyword">if</span> (fs.existsSync(filePath)) {
+    <span class="hljs-keyword">return</span> filePath;
+  }
+  <span class="hljs-keyword">if</span> (filePath.slice(<span class="hljs-number">0</span>, <span class="hljs-number">2</span>) === <span class="hljs-string">'~/'</span>) {
+    possiblePath = path.resolve(process.env.HOME, filePath.slice(<span class="hljs-number">2</span>));
+    <span class="hljs-keyword">if</span> (fs.existsSync(possiblePath)) {
+      <span class="hljs-keyword">return</span> possiblePath;
+    } <span class="hljs-keyword">else</span> {
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-5" id="section-5"></a>
+</div>
+<p>for ~/ paths, don't try to resolve further</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript">      <span class="hljs-keyword">return</span> filePath;
+    }
+  }
+  [<span class="hljs-string">'.'</span>, __dirname].forEach(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">base</span>) </span>{
+    possiblePath = path.resolve(base, filePath);
+    <span class="hljs-keyword">if</span> (fs.existsSync(possiblePath)) {
+      <span class="hljs-keyword">return</span> possiblePath;
+    }
+  });
+  <span class="hljs-keyword">return</span> <span class="hljs-literal">null</span>;
+}
+
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">makeCertFileCoercer</span>(<span class="hljs-params">type, description, helpText</span>) </span>{
+  <span class="hljs-keyword">return</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">certFileCoercer</span>(<span class="hljs-params">value</span>) </span>{
+    <span class="hljs-keyword">if</span> (matchesCertType(value, type)) {
+      <span class="hljs-keyword">return</span> value;
+    }
+
+    <span class="hljs-keyword">const</span> filePath = resolveFilePath(value);
+    <span class="hljs-keyword">if</span> (filePath) {
+      <span class="hljs-keyword">return</span> fs.readFileSync(filePath)
+    }
+    <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(
+      <span class="hljs-string">'Invalid '</span> + description + <span class="hljs-string">', not a valid crypt cert/key or file path'</span> +
+      (helpText ? <span class="hljs-string">'\n'</span> + helpText : <span class="hljs-string">''</span>)
+    )
+  };
+}
+
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">getHashCode</span>(<span class="hljs-params">str</span>) </span>{
+  <span class="hljs-keyword">var</span> hash = <span class="hljs-number">0</span>;
+  <span class="hljs-keyword">if</span> (str.length == <span class="hljs-number">0</span>) <span class="hljs-keyword">return</span> hash;
+  <span class="hljs-keyword">for</span> (i = <span class="hljs-number">0</span>; i &lt; str.length; i++) {
+    char = str.charCodeAt(i);
+    hash = ((hash&lt;&lt;<span class="hljs-number">5</span>)-hash)+char;
+    hash = hash &amp; hash; <span class="hljs-comment">// Convert to 32bit integer</span>
+  }
+  <span class="hljs-keyword">return</span> hash;
+}
+
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-6" id="section-6"></a>
+</div>
+<div class="dox">
+<div class="summary">
+<p>Arguments</p>
+</div>
+<div class="body">
+</div>
+</div>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">processArgs</span>(<span class="hljs-params">args, options</span>) </span>{
+  <span class="hljs-keyword">var</span> baseArgv;
+  <span class="hljs-built_in">console</span>.log();
+  <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'loading configuration...'</span>);
+
+  <span class="hljs-keyword">if</span> (options) {
+    baseArgv = yargs(args).config(options);
+  } <span class="hljs-keyword">else</span> {
+    baseArgv = yargs(args).config(<span class="hljs-string">'settings'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">settingsPathArg</span>) </span>{
+      <span class="hljs-keyword">const</span> settingsPath = resolveFilePath(settingsPathArg);
+      <span class="hljs-keyword">return</span> <span class="hljs-built_in">JSON</span>.parse(fs.readFileSync(settingsPath, <span class="hljs-string">'utf-8'</span>));
+    });
+  }
+  <span class="hljs-keyword">return</span> baseArgv
+    .usage(<span class="hljs-string">'\nSimple IdP for SAML 2.0 WebSSO &amp; SLO Profile\n\n'</span> +
+        <span class="hljs-string">'Launches an IdP web server that mints SAML assertions or logout responses for a Service Provider (SP)\n\n'</span> +
+        <span class="hljs-string">'Usage:\n\t$0 -acs {url} -aud {uri}'</span>)
+    .options({
+      <span class="hljs-attr">port</span>: {
+        <span class="hljs-attr">description</span>: <span class="hljs-string">'IdP Web Server Listener Port'</span>,
+        <span class="hljs-attr">required</span>: <span class="hljs-literal">true</span>,
+        <span class="hljs-attr">alias</span>: <span class="hljs-string">'p'</span>,
+        <span class="hljs-attr">default</span>: <span class="hljs-number">7000</span>
+      },
+      <span class="hljs-attr">cert</span>: {
+        <span class="hljs-attr">description</span>: <span class="hljs-string">'IdP Signature PublicKey Certificate'</span>,
+        <span class="hljs-attr">required</span>: <span class="hljs-literal">true</span>,
+        <span class="hljs-attr">default</span>: <span class="hljs-string">'./idp-public-cert.pem'</span>,
+        <span class="hljs-attr">coerce</span>: makeCertFileCoercer(<span class="hljs-string">'certificate'</span>, <span class="hljs-string">'IdP Signature PublicKey Certificate'</span>, KEY_CERT_HELP_TEXT)
+      },
+      <span class="hljs-attr">key</span>: {
+        <span class="hljs-attr">description</span>: <span class="hljs-string">'IdP Signature PrivateKey Certificate'</span>,
+        <span class="hljs-attr">required</span>: <span class="hljs-literal">true</span>,
+        <span class="hljs-attr">default</span>: <span class="hljs-string">'./idp-private-key.pem'</span>,
+        <span class="hljs-attr">coerce</span>: makeCertFileCoercer(<span class="hljs-string">'RSA private key'</span>, <span class="hljs-string">'IdP Signature PrivateKey Certificate'</span>, KEY_CERT_HELP_TEXT)
+      },
+      <span class="hljs-attr">issuer</span>: {
+        <span class="hljs-attr">description</span>: <span class="hljs-string">'IdP Issuer URI'</span>,
+        <span class="hljs-attr">required</span>: <span class="hljs-literal">true</span>,
+        <span class="hljs-attr">alias</span>: <span class="hljs-string">'iss'</span>,
+        <span class="hljs-attr">default</span>: <span class="hljs-string">'urn:example:idp'</span>
+      },
+      <span class="hljs-attr">acsUrl</span>: {
+        <span class="hljs-attr">description</span>: <span class="hljs-string">'SP Assertion Consumer URL'</span>,
+        <span class="hljs-attr">required</span>: <span class="hljs-literal">true</span>,
+        <span class="hljs-attr">alias</span>: <span class="hljs-string">'acs'</span>
+      },
+      <span class="hljs-attr">sloUrl</span>: {
+        <span class="hljs-attr">description</span>: <span class="hljs-string">'SP Single Logout URL'</span>,
+        <span class="hljs-attr">required</span>: <span class="hljs-literal">false</span>,
+        <span class="hljs-attr">alias</span>: <span class="hljs-string">'slo'</span>
+      },
+      <span class="hljs-attr">audience</span>: {
+        <span class="hljs-attr">description</span>: <span class="hljs-string">'SP Audience URI'</span>,
+        <span class="hljs-attr">required</span>: <span class="hljs-literal">true</span>,
+        <span class="hljs-attr">alias</span>: <span class="hljs-string">'aud'</span>
+      },
+      <span class="hljs-attr">serviceProviderId</span>: {
+        <span class="hljs-attr">description</span>: <span class="hljs-string">'SP Issuer/Entity URI'</span>,
+        <span class="hljs-attr">required</span>: <span class="hljs-literal">false</span>,
+        <span class="hljs-attr">alias</span>: <span class="hljs-string">'spId'</span>,
+        <span class="hljs-attr">string</span>: <span class="hljs-literal">true</span>
+      },
+      <span class="hljs-attr">relayState</span>: {
+        <span class="hljs-attr">description</span>: <span class="hljs-string">'Default SAML RelayState for SAMLResponse'</span>,
+        <span class="hljs-attr">required</span>: <span class="hljs-literal">false</span>,
+        <span class="hljs-attr">alias</span>: <span class="hljs-string">'rs'</span>
+      },
+      <span class="hljs-attr">disableRequestAcsUrl</span>: {
+        <span class="hljs-attr">description</span>: <span class="hljs-string">'Disables ability for SP AuthnRequest to specify Assertion Consumer URL'</span>,
+        <span class="hljs-attr">required</span>: <span class="hljs-literal">false</span>,
+        <span class="hljs-attr">boolean</span>: <span class="hljs-literal">true</span>,
+        <span class="hljs-attr">alias</span>: <span class="hljs-string">'static'</span>,
+        <span class="hljs-attr">default</span>: <span class="hljs-literal">false</span>
+      },
+      <span class="hljs-attr">encryptAssertion</span>: {
+        <span class="hljs-attr">description</span>: <span class="hljs-string">'Encrypts assertion with SP Public Key'</span>,
+        <span class="hljs-attr">required</span>: <span class="hljs-literal">false</span>,
+        <span class="hljs-attr">boolean</span>: <span class="hljs-literal">true</span>,
+        <span class="hljs-attr">alias</span>: <span class="hljs-string">'enc'</span>,
+        <span class="hljs-attr">default</span>: <span class="hljs-literal">false</span>
+      },
+      <span class="hljs-attr">encryptionCert</span>: {
+        <span class="hljs-attr">description</span>: <span class="hljs-string">'SP Certificate (pem) for Assertion Encryption'</span>,
+        <span class="hljs-attr">required</span>: <span class="hljs-literal">false</span>,
+        <span class="hljs-attr">string</span>: <span class="hljs-literal">true</span>,
+        <span class="hljs-attr">alias</span>: <span class="hljs-string">'encCert'</span>,
+        <span class="hljs-attr">coerce</span>: makeCertFileCoercer(<span class="hljs-string">'certificate'</span>, <span class="hljs-string">'Encryption cert'</span>)
+      },
+      <span class="hljs-attr">encryptionPublicKey</span>: {
+        <span class="hljs-attr">description</span>: <span class="hljs-string">'SP RSA Public Key (pem) for Assertion Encryption '</span> +
+        <span class="hljs-string">'(e.g. openssl x509 -pubkey -noout -in sp-cert.pem)'</span>,
+        <span class="hljs-attr">required</span>: <span class="hljs-literal">false</span>,
+        <span class="hljs-attr">string</span>: <span class="hljs-literal">true</span>,
+        <span class="hljs-attr">alias</span>: <span class="hljs-string">'encKey'</span>,
+        <span class="hljs-attr">coerce</span>: makeCertFileCoercer(<span class="hljs-string">'public key'</span>, <span class="hljs-string">'Encryption public key'</span>)
+      },
+      <span class="hljs-attr">httpsPrivateKey</span>: {
+        <span class="hljs-attr">description</span>: <span class="hljs-string">'Web Server TLS/SSL Private Key (pem)'</span>,
+        <span class="hljs-attr">required</span>: <span class="hljs-literal">false</span>,
+        <span class="hljs-attr">string</span>: <span class="hljs-literal">true</span>,
+        <span class="hljs-attr">coerce</span>: makeCertFileCoercer(<span class="hljs-string">'RSA private key'</span>)
+      },
+      <span class="hljs-attr">httpsCert</span>: {
+        <span class="hljs-attr">description</span>: <span class="hljs-string">'Web Server TLS/SSL Certificate (pem)'</span>,
+        <span class="hljs-attr">required</span>: <span class="hljs-literal">false</span>,
+        <span class="hljs-attr">string</span>: <span class="hljs-literal">true</span>,
+        <span class="hljs-attr">coerce</span>: makeCertFileCoercer(<span class="hljs-string">'certificate'</span>)
+      },
+      <span class="hljs-attr">https</span>: {
+        <span class="hljs-attr">description</span>: <span class="hljs-string">'Enables HTTPS Listener (requires httpsPrivateKey and httpsCert)'</span>,
+        <span class="hljs-attr">required</span>: <span class="hljs-literal">true</span>,
+        <span class="hljs-attr">boolean</span>: <span class="hljs-literal">true</span>,
+        <span class="hljs-attr">default</span>: <span class="hljs-literal">false</span>
+      },
+      <span class="hljs-attr">signResponse</span>: {
+        <span class="hljs-attr">description</span>: <span class="hljs-string">'Enables signing of responses'</span>,
+        <span class="hljs-attr">required</span>: <span class="hljs-literal">false</span>,
+        <span class="hljs-attr">boolean</span>: <span class="hljs-literal">true</span>,
+        <span class="hljs-attr">default</span>: <span class="hljs-literal">true</span>,
+        <span class="hljs-attr">alias</span>: <span class="hljs-string">'signResponse'</span>
+      },
+      <span class="hljs-attr">configFile</span>: {
+        <span class="hljs-attr">description</span>: <span class="hljs-string">'Path to a SAML attribute config file'</span>,
+        <span class="hljs-attr">required</span>: <span class="hljs-literal">true</span>,
+        <span class="hljs-attr">default</span>: <span class="hljs-built_in">require</span>.resolve(<span class="hljs-string">'./config.js'</span>),
+        <span class="hljs-attr">alias</span>: <span class="hljs-string">'conf'</span>
+      },
+      <span class="hljs-attr">rollSession</span>: {
+        <span class="hljs-attr">description</span>: <span class="hljs-string">'Create a new session for every authn request instead of reusing an existing session'</span>,
+        <span class="hljs-attr">required</span>: <span class="hljs-literal">false</span>,
+        <span class="hljs-attr">boolean</span>: <span class="hljs-literal">true</span>,
+        <span class="hljs-attr">default</span>: <span class="hljs-literal">false</span>
+      },
+      <span class="hljs-attr">authnContextClassRef</span>: {
+        <span class="hljs-attr">description</span>: <span class="hljs-string">'Authentication Context Class Reference'</span>,
+        <span class="hljs-attr">required</span>: <span class="hljs-literal">false</span>,
+        <span class="hljs-attr">string</span>: <span class="hljs-literal">true</span>,
+        <span class="hljs-attr">default</span>: <span class="hljs-string">'urn:oasis:names:tc:SAML:2.0:ac:classes:PasswordProtectedTransport'</span>,
+        <span class="hljs-attr">alias</span>: <span class="hljs-string">'acr'</span>
+      },
+      <span class="hljs-attr">authnContextDecl</span>: {
+        <span class="hljs-attr">description</span>: <span class="hljs-string">'Authentication Context Declaration (XML FilePath)'</span>,
+        <span class="hljs-attr">required</span>: <span class="hljs-literal">false</span>,
+        <span class="hljs-attr">string</span>: <span class="hljs-literal">true</span>,
+        <span class="hljs-attr">alias</span>: <span class="hljs-string">'acd'</span>,
+        <span class="hljs-attr">coerce</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">value</span>) </span>{
+          <span class="hljs-keyword">const</span> filePath = resolveFilePath(value);
+          <span class="hljs-keyword">if</span> (filePath) {
+            <span class="hljs-keyword">return</span> fs.readFileSync(filePath, <span class="hljs-string">'utf8'</span>)
+          }
+        }
+      }
+    })
+    .example(<span class="hljs-string">'\t$0 --acs http://acme.okta.com/auth/saml20/exampleidp --aud https://www.okta.com/saml2/service-provider/spf5aFRRXFGIMAYXQPNV'</span>, <span class="hljs-string">''</span>)
+    .check(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">argv, aliases</span>) </span>{
+      <span class="hljs-keyword">if</span> (argv.encryptAssertion) {
+        <span class="hljs-keyword">if</span> (argv.encryptionPublicKey === <span class="hljs-literal">undefined</span>) {
+          <span class="hljs-keyword">return</span> <span class="hljs-string">'encryptionPublicKey argument is also required for assertion encryption'</span>;
+        }
+        <span class="hljs-keyword">if</span> (argv.encryptionCert === <span class="hljs-literal">undefined</span>) {
+          <span class="hljs-keyword">return</span> <span class="hljs-string">'encryptionCert argument is also required for assertion encryption'</span>;
+        }
+      }
+      <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;
+    })
+    .check(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">argv, aliases</span>) </span>{
+      <span class="hljs-keyword">if</span> (argv.config) {
+        <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;
+      }
+      <span class="hljs-keyword">const</span> configFilePath = resolveFilePath(argv.configFile);
+
+      <span class="hljs-keyword">if</span> (!configFilePath) {
+        <span class="hljs-keyword">return</span> <span class="hljs-string">'SAML attribute config file path "'</span> + argv.configFile + <span class="hljs-string">'" is not a valid path.\n'</span>;
+      }
+      <span class="hljs-keyword">try</span> {
+        argv.config = <span class="hljs-built_in">require</span>(configFilePath);
+      } <span class="hljs-keyword">catch</span> (error) {
+        <span class="hljs-keyword">return</span> <span class="hljs-string">'Encountered an exception while loading SAML attribute config file "'</span> + configFilePath + <span class="hljs-string">'".\n'</span> + error;
+      }
+      <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;
+    })
+    .wrap(baseArgv.terminalWidth());
+}
+
+
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">_runServer</span>(<span class="hljs-params">argv</span>) </span>{
+  <span class="hljs-keyword">const</span> app = express();
+  <span class="hljs-keyword">const</span> httpServer = argv.https ?
+    https.createServer({ <span class="hljs-attr">key</span>: argv.httpsPrivateKey, <span class="hljs-attr">cert</span>: argv.httpsCert }, app) :
+    http.createServer(app);
+  <span class="hljs-keyword">const</span> blocks = {};
+
+  <span class="hljs-built_in">console</span>.log();
+  <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'Listener Port:\n\t'</span> + argv.port);
+  <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'HTTPS Enabled:\n\t'</span> + argv.https);
+  <span class="hljs-built_in">console</span>.log();
+  <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'[IdP]'</span>);
+  <span class="hljs-built_in">console</span>.log();
+  <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'Issuer URI:\n\t'</span> + argv.issuer);
+  <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'Sign Response Message:\n\t'</span> + argv.signResponse);
+  <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'Encrypt Assertion:\n\t'</span> + argv.encryptAssertion);
+  <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'Authentication Context Class Reference:\n\t'</span> + argv.authnContextClassRef);
+  <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'Authentication Context Declaration:\n\n'</span> + argv.authnContextDecl);
+  <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'Default RelayState:\n\t'</span> + argv.relayState);
+  <span class="hljs-built_in">console</span>.log();
+  <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'[SP]'</span>);
+  <span class="hljs-built_in">console</span>.log();
+  <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'Issuer URI:\n\t'</span> + argv.serviceProviderId);
+  <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'Audience URI:\n\t'</span> + argv.audience);
+  <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'ACS URL:\n\t'</span> + argv.acsUrl);
+  <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'SLO URL:\n\t'</span> + argv.sloUrl);
+  <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'Trust ACS URL in Request:\n\t'</span> + !argv.disableRequestAcsUrl);
+  <span class="hljs-built_in">console</span>.log();
+
+  <span class="hljs-built_in">console</span>.log();
+
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-7" id="section-7"></a>
+</div>
+<div class="dox">
+<div class="summary">
+<p>IdP Configuration</p>
+</div>
+<div class="body">
+</div>
+</div>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript">
+  SimpleProfileMapper.prototype.metadata = argv.config.metadata;
+
+  <span class="hljs-keyword">const</span> idpOptions = {
+    <span class="hljs-attr">issuer</span>:                 argv.issuer,
+    <span class="hljs-attr">serviceProviderId</span>:      argv.serviceProviderId || argv.audience,
+    <span class="hljs-attr">cert</span>:                   argv.cert,
+    <span class="hljs-attr">key</span>:                    argv.key,
+    <span class="hljs-attr">audience</span>:               argv.audience,
+    <span class="hljs-attr">recipient</span>:              argv.acsUrl,
+    <span class="hljs-attr">destination</span>:            argv.acsUrl,
+    <span class="hljs-attr">acsUrl</span>:                 argv.acsUrl,
+    <span class="hljs-attr">sloUrl</span>:                 argv.sloUrl,
+    <span class="hljs-attr">RelayState</span>:             argv.relayState,
+    <span class="hljs-attr">allowRequestAcsUrl</span>:     !argv.disableRequestAcsUrl,
+    <span class="hljs-attr">digestAlgorithm</span>:        <span class="hljs-string">'sha256'</span>,
+    <span class="hljs-attr">signatureAlgorithm</span>:     <span class="hljs-string">'rsa-sha256'</span>,
+    <span class="hljs-attr">signResponse</span>:           argv.signResponse,
+    <span class="hljs-attr">encryptAssertion</span>:       argv.encryptAssertion,
+    <span class="hljs-attr">encryptionCert</span>:         argv.encryptionCert,
+    <span class="hljs-attr">encryptionPublicKey</span>:    argv.encryptionPublicKey,
+    <span class="hljs-attr">encryptionAlgorithm</span>:    <span class="hljs-string">'http://www.w3.org/2001/04/xmlenc#aes256-cbc'</span>,
+    <span class="hljs-attr">keyEncryptionAlgorithm</span>: <span class="hljs-string">'http://www.w3.org/2001/04/xmlenc#rsa-oaep-mgf1p'</span>,
+    <span class="hljs-attr">lifetimeInSeconds</span>:      <span class="hljs-number">3600</span>,
+    <span class="hljs-attr">authnContextClassRef</span>:   argv.authnContextClassRef,
+    <span class="hljs-attr">authnContextDecl</span>:       argv.authnContextDecl,
+    <span class="hljs-attr">includeAttributeNameFormat</span>: <span class="hljs-literal">true</span>,
+    <span class="hljs-attr">profileMapper</span>:          SimpleProfileMapper,
+    <span class="hljs-attr">postEndpointPath</span>:       IDP_PATHS.SSO,
+    <span class="hljs-attr">redirectEndpointPath</span>:   IDP_PATHS.SSO,
+    <span class="hljs-attr">logoutEndpointPaths</span>:    argv.sloUrl ?
+                            {
+                              <span class="hljs-attr">redirect</span>: IDP_PATHS.SLO,
+                              <span class="hljs-attr">post</span>: IDP_PATHS.SLO
+                            } : {},
+    <span class="hljs-attr">getUserFromRequest</span>:     <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">req</span>) </span>{ <span class="hljs-keyword">return</span> req.user; },
+    <span class="hljs-attr">getPostURL</span>:             <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">audience, authnRequestDom, req, callback</span>) </span>{
+                              <span class="hljs-keyword">return</span> callback(<span class="hljs-literal">null</span>, (req.authnRequest &amp;&amp; req.authnRequest.acsUrl) ?
+                                req.authnRequest.acsUrl :
+                                argv.acsUrl);
+                            },
+    <span class="hljs-attr">transformAssertion</span>:     <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">assertionDom</span>) </span>{
+                              <span class="hljs-keyword">if</span> (argv.authnContextDecl) {
+                                <span class="hljs-keyword">var</span> declDoc;
+                                <span class="hljs-keyword">try</span> {
+                                  declDoc = <span class="hljs-keyword">new</span> Parser().parseFromString(argv.authnContextDecl);
+                                } <span class="hljs-keyword">catch</span>(err){
+                                  <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'Unable to parse Authentication Context Declaration XML'</span>, err);
+                                }
+                                <span class="hljs-keyword">if</span> (declDoc) {
+                                  <span class="hljs-keyword">const</span> authnContextDeclEl = assertionDom.createElementNS(<span class="hljs-string">'urn:oasis:names:tc:SAML:2.0:assertion'</span>, <span class="hljs-string">'saml:AuthnContextDecl'</span>);
+                                  authnContextDeclEl.appendChild(declDoc.documentElement);
+                                  <span class="hljs-keyword">const</span> authnContextEl = assertionDom.getElementsByTagName(<span class="hljs-string">'saml:AuthnContext'</span>)[<span class="hljs-number">0</span>];
+                                  authnContextEl.appendChild(authnContextDeclEl);
+                                }
+                              }
+                            },
+    <span class="hljs-attr">responseHandler</span>:        <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">response, opts, req, res, next</span>) </span>{
+                              <span class="hljs-built_in">console</span>.log();
+                              <span class="hljs-built_in">console</span>.log(<span class="hljs-string">`Sending SAMLResponse to <span class="hljs-subst">${opts.postUrl}</span> with RelayState <span class="hljs-subst">${opts.RelayState}</span> =&gt;\n`</span>);
+                              <span class="hljs-built_in">console</span>.log(xmlFormat(response.toString(), {<span class="hljs-attr">indentation</span>: <span class="hljs-string">'  '</span>}));
+                              <span class="hljs-built_in">console</span>.log();
+                              res.render(<span class="hljs-string">'samlresponse'</span>, {
+                                <span class="hljs-attr">AcsUrl</span>: opts.postUrl,
+                                <span class="hljs-attr">SAMLResponse</span>: response.toString(<span class="hljs-string">'base64'</span>),
+                                <span class="hljs-attr">RelayState</span>: opts.RelayState
+                              });
+                            }
+  }
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-8" id="section-8"></a>
+</div>
+<div class="dox">
+<div class="summary">
+<p>App Environment</p>
+</div>
+<div class="body">
+</div>
+</div>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript">
+  app.set(<span class="hljs-string">'port'</span>, process.env.PORT || argv.port);
+  app.set(<span class="hljs-string">'views'</span>, path.join(__dirname, <span class="hljs-string">'views'</span>));
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-9" id="section-9"></a>
+</div>
+<div class="dox">
+<div class="summary">
+<p>View Engine</p>
+</div>
+<div class="body">
+</div>
+</div>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript">
+  app.set(<span class="hljs-string">'view engine'</span>, <span class="hljs-string">'hbs'</span>);
+  app.set(<span class="hljs-string">'view options'</span>, { <span class="hljs-attr">layout</span>: <span class="hljs-string">'layout'</span> })
+  app.engine(<span class="hljs-string">'handlebars'</span>, hbs.__express);
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-10" id="section-10"></a>
+</div>
+<p>Register Helpers</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript">  hbs.registerHelper(<span class="hljs-string">'extend'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">name, context</span>) </span>{
+    <span class="hljs-keyword">var</span> block = blocks[name];
+    <span class="hljs-keyword">if</span> (!block) {
+      block = blocks[name] = [];
+    }
+
+    block.push(context.fn(<span class="hljs-keyword">this</span>));
+  });
+
+  hbs.registerHelper(<span class="hljs-string">'block'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">name</span>) </span>{
+    <span class="hljs-keyword">const</span> val = (blocks[name] || []).join(<span class="hljs-string">'\n'</span>);
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-11" id="section-11"></a>
+</div>
+<p>clear the block</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript">    blocks[name] = [];
+    <span class="hljs-keyword">return</span> val;
+  });
+
+
+  hbs.registerHelper(<span class="hljs-string">'select'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">selected, options</span>) </span>{
+    <span class="hljs-keyword">return</span> options.fn(<span class="hljs-keyword">this</span>).replace(
+      <span class="hljs-keyword">new</span> <span class="hljs-built_in">RegExp</span>(<span class="hljs-string">' value=\"'</span> + selected + <span class="hljs-string">'\"'</span>), <span class="hljs-string">'$&amp; selected="selected"'</span>);
+  });
+
+  hbs.registerHelper(<span class="hljs-string">'getProperty'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">attribute, context</span>) </span>{
+    <span class="hljs-keyword">return</span> context[attribute];
+  });
+
+  hbs.registerHelper(<span class="hljs-string">'serialize'</span>, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">context</span>) </span>{
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> Buffer(<span class="hljs-built_in">JSON</span>.stringify(context)).toString(<span class="hljs-string">'base64'</span>);
+  });
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-12" id="section-12"></a>
+</div>
+<div class="dox">
+<div class="summary">
+<p>Middleware</p>
+</div>
+<div class="body">
+</div>
+</div>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript">
+  app.use(logger(<span class="hljs-string">':date&gt; :method :url - {:referrer} =&gt; :status (:response-time ms)'</span>, {
+    <span class="hljs-attr">skip</span>: <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">req, res</span>)
+      </span>{
+        <span class="hljs-keyword">return</span> req.path.startsWith(<span class="hljs-string">'/bower_components'</span>) || req.path.startsWith(<span class="hljs-string">'/css'</span>)
+      }
+  }));
+  app.use(bodyParser.urlencoded({<span class="hljs-attr">extended</span>: <span class="hljs-literal">true</span>}));
+  app.use(express.static(path.join(__dirname, <span class="hljs-string">'public'</span>)));
+  app.use(session({
+    <span class="hljs-attr">secret</span>: <span class="hljs-string">'The universe works on a math equation that never even ever really ends in the end'</span>,
+    <span class="hljs-attr">resave</span>: <span class="hljs-literal">false</span>,
+    <span class="hljs-attr">saveUninitialized</span>: <span class="hljs-literal">true</span>,
+    <span class="hljs-attr">name</span>: <span class="hljs-string">'idp_sid'</span>,
+    <span class="hljs-attr">cookie</span>: { <span class="hljs-attr">maxAge</span>: <span class="hljs-number">60</span> * <span class="hljs-number">60</span> * <span class="hljs-number">1000</span> }
+  }));
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-13" id="section-13"></a>
+</div>
+<div class="dox">
+<div class="summary">
+<p>View Handlers</p>
+</div>
+<div class="body">
+</div>
+</div>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript">
+  <span class="hljs-keyword">const</span> showUser = <span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params">req, res, next</span>) </span>{
+    res.render(<span class="hljs-string">'user'</span>, {
+      <span class="hljs-attr">user</span>: req.user,
+      <span class="hljs-attr">participant</span>: req.participant,
+      <span class="hljs-attr">metadata</span>: req.metadata,
+      <span class="hljs-attr">authnRequest</span>: req.authnRequest,
+      <span class="hljs-attr">idp</span>: req.idp.options,
+      <span class="hljs-attr">paths</span>: IDP_PATHS
+    });
+  }
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-14" id="section-14"></a>
+</div>
+<div class="dox">
+<div class="summary">
+<p>Shared Handlers</p>
+</div>
+<div class="body">
+</div>
+</div>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript">
+  <span class="hljs-keyword">const</span> parseSamlRequest = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">req, res, next</span>) </span>{
+    samlp.parseRequest(req, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">err, data</span>) </span>{
+      <span class="hljs-keyword">if</span> (err) {
+        <span class="hljs-keyword">return</span> res.render(<span class="hljs-string">'error'</span>, {
+          <span class="hljs-attr">message</span>: <span class="hljs-string">'SAML AuthnRequest Parse Error: '</span> + err.message,
+          <span class="hljs-attr">error</span>: err
+        });
+      };
+      <span class="hljs-keyword">if</span> (data) {
+        req.authnRequest = {
+          <span class="hljs-attr">relayState</span>: req.query.RelayState || req.body.RelayState,
+          <span class="hljs-attr">id</span>: data.id,
+          <span class="hljs-attr">issuer</span>: data.issuer,
+          <span class="hljs-attr">destination</span>: data.destination,
+          <span class="hljs-attr">acsUrl</span>: data.assertionConsumerServiceURL,
+          <span class="hljs-attr">forceAuthn</span>: data.forceAuthn === <span class="hljs-string">'true'</span>
+        };
+        <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'Received AuthnRequest =&gt; \n'</span>, req.authnRequest);
+      }
+      <span class="hljs-keyword">return</span> showUser(req, res, next);
+    })
+  };
+
+  <span class="hljs-keyword">const</span> getSessionIndex = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">req</span>) </span>{
+    <span class="hljs-keyword">if</span> (req &amp;&amp; req.session) {
+      <span class="hljs-keyword">return</span> <span class="hljs-built_in">Math</span>.abs(getHashCode(req.session.id)).toString();
+    }
+  }
+
+  <span class="hljs-keyword">const</span> getParticipant = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">req</span>) </span>{
+    <span class="hljs-keyword">return</span> {
+      <span class="hljs-attr">serviceProviderId</span>: req.idp.options.serviceProviderId,
+      <span class="hljs-attr">sessionIndex</span>: getSessionIndex(req),
+      <span class="hljs-attr">nameId</span>: req.user.userName,
+      <span class="hljs-attr">nameIdFormat</span>: req.user.nameIdFormat,
+      <span class="hljs-attr">serviceProviderLogoutURL</span>: req.idp.options.sloUrl
+    }
+  }
+
+  <span class="hljs-keyword">const</span> parseLogoutRequest = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">req, res, next</span>) </span>{
+    <span class="hljs-keyword">if</span> (!req.idp.options.sloUrl) {
+      <span class="hljs-keyword">return</span> res.render(<span class="hljs-string">'error'</span>, {
+        <span class="hljs-attr">message</span>: <span class="hljs-string">'SAML Single Logout Service URL not defined for Service Provider'</span>
+      });
+    };
+
+    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'Processing SAML SLO request for participant =&gt; \n'</span>, req.participant);
+
+    <span class="hljs-keyword">return</span> samlp.logout({
+      <span class="hljs-attr">issuer</span>:                 req.idp.options.issuer,
+      <span class="hljs-attr">cert</span>:                   req.idp.options.cert,
+      <span class="hljs-attr">key</span>:                    req.idp.options.key,
+      <span class="hljs-attr">digestAlgorithm</span>:        req.idp.options.digestAlgorithm,
+      <span class="hljs-attr">signatureAlgorithm</span>:     req.idp.options.signatureAlgorithm,
+      <span class="hljs-attr">sessionParticipants</span>:    <span class="hljs-keyword">new</span> SessionParticipants(
+      [
+        req.participant
+      ]),
+      <span class="hljs-attr">clearIdPSession</span>: <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">callback</span>) </span>{
+        <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'Destroying session '</span> + req.session.id + <span class="hljs-string">' for participant'</span>, req.participant);
+        req.session.destroy();
+        callback();
+      }
+    })(req, res, next);
+  }
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-15" id="section-15"></a>
+</div>
+<div class="dox">
+<div class="summary">
+<p>Routes</p>
+</div>
+<div class="body">
+</div>
+</div>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript">
+  app.use(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">req, res, next</span>)</span>{
+    <span class="hljs-keyword">if</span> (argv.rollSession) {
+      req.session.regenerate(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">err</span>) </span>{
+        <span class="hljs-keyword">return</span> next();
+      });
+    } <span class="hljs-keyword">else</span> {
+      next()
+    }
+  });
+
+  app.use(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">req, res, next</span>)</span>{
+    req.user = argv.config.user;
+    req.metadata = argv.config.metadata;
+    req.idp = { <span class="hljs-attr">options</span>: idpOptions };
+    req.participant = getParticipant(req);
+    next();
+  });
+
+  app.get([<span class="hljs-string">'/'</span>, <span class="hljs-string">'/idp'</span>, IDP_PATHS.SSO], parseSamlRequest);
+  app.post([<span class="hljs-string">'/'</span>, <span class="hljs-string">'/idp'</span>, IDP_PATHS.SSO], parseSamlRequest);
+
+  app.get(IDP_PATHS.SLO, parseLogoutRequest);
+  app.post(IDP_PATHS.SLO, parseLogoutRequest);
+
+  app.post(IDP_PATHS.SIGN_IN, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">req, res</span>) </span>{
+    <span class="hljs-keyword">const</span> authOptions = extend({}, req.idp.options);
+    <span class="hljs-built_in">Object</span>.keys(req.body).forEach(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">key</span>) </span>{
+      <span class="hljs-keyword">var</span> buffer;
+      <span class="hljs-keyword">if</span> (key === <span class="hljs-string">'_authnRequest'</span>) {
+        buffer = <span class="hljs-keyword">new</span> Buffer(req.body[key], <span class="hljs-string">'base64'</span>);
+        req.authnRequest = <span class="hljs-built_in">JSON</span>.parse(buffer.toString(<span class="hljs-string">'utf8'</span>));
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-16" id="section-16"></a>
+</div>
+<p>Apply AuthnRequest Params</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript">        authOptions.inResponseTo = req.authnRequest.id;
+        <span class="hljs-keyword">if</span> (req.idp.options.allowRequestAcsUrl &amp;&amp; req.authnRequest.acsUrl) {
+          authOptions.acsUrl = req.authnRequest.acsUrl;
+          authOptions.recipient = req.authnRequest.acsUrl;
+          authOptions.destination = req.authnRequest.acsUrl;
+          authOptions.forceAuthn = req.authnRequest.forceAuthn;
+        }
+        <span class="hljs-keyword">if</span> (req.authnRequest.relayState) {
+          authOptions.RelayState = req.authnRequest.relayState;
+        }
+      } <span class="hljs-keyword">else</span> {
+        req.user[key] = req.body[key];
+      }
+    });
+
+    <span class="hljs-keyword">if</span> (!authOptions.encryptAssertion) {
+      <span class="hljs-keyword">delete</span> authOptions.encryptionCert;
+      <span class="hljs-keyword">delete</span> authOptions.encryptionPublicKey;
+    }
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-17" id="section-17"></a>
+</div>
+<p>Set Session Index</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript">    authOptions.sessionIndex = getSessionIndex(req);
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-18" id="section-18"></a>
+</div>
+<p>Keep calm and Single Sign On</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript">    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'Sending SAML Response\nUser =&gt; \n%s\nOptions =&gt; \n'</span>,
+      <span class="hljs-built_in">JSON</span>.stringify(req.user, <span class="hljs-literal">null</span>, <span class="hljs-number">2</span>), authOptions);
+    samlp.auth(authOptions)(req, res);
+  })
+
+  app.get(IDP_PATHS.METADATA, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">req, res, next</span>) </span>{
+    samlp.metadata(req.idp.options)(req, res);
+  });
+
+  app.post(IDP_PATHS.METADATA, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">req, res, next</span>) </span>{
+    <span class="hljs-keyword">if</span> (req.body &amp;&amp; req.body.attributeName &amp;&amp; req.body.displayName) {
+      <span class="hljs-keyword">var</span> attributeExists = <span class="hljs-literal">false</span>;
+      <span class="hljs-keyword">const</span> attribute = {
+        <span class="hljs-attr">id</span>: req.body.attributeName,
+        <span class="hljs-attr">optional</span>: <span class="hljs-literal">true</span>,
+        <span class="hljs-attr">displayName</span>: req.body.displayName,
+        <span class="hljs-attr">description</span>: req.body.description || <span class="hljs-string">''</span>,
+        <span class="hljs-attr">multiValue</span>: req.body.valueType === <span class="hljs-string">'multi'</span>
+      };
+
+      req.metadata.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">entry</span>) </span>{
+        <span class="hljs-keyword">if</span> (entry.id === req.body.attributeName) {
+          entry = attribute;
+          attributeExists = <span class="hljs-literal">true</span>;
+        }
+      });
+
+      <span class="hljs-keyword">if</span> (!attributeExists) {
+        req.metadata.push(attribute);
+      }
+      <span class="hljs-built_in">console</span>.log(<span class="hljs-string">"Updated SAML Attribute Metadata =&gt; \n"</span>, req.metadata)
+      res.status(<span class="hljs-number">200</span>).end();
+    }
+  });
+
+  app.get(IDP_PATHS.SIGN_OUT, <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">req, res, next</span>) </span>{
+    <span class="hljs-keyword">if</span> (req.idp.options.sloUrl) {
+      <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'Initiating SAML SLO request for user: '</span> + req.user.userName +
+      <span class="hljs-string">' with sessionIndex: '</span> + getSessionIndex(req));
+      res.redirect(IDP_PATHS.SLO);
+    } <span class="hljs-keyword">else</span> {
+      <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'SAML SLO is not enabled for SP, destroying IDP session'</span>);
+      req.session.destroy(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">err</span>) </span>{
+        <span class="hljs-keyword">if</span> (err) {
+          <span class="hljs-keyword">throw</span> err;
+        }
+        res.redirect(<span class="hljs-string">'back'</span>);
+      })
+    }
+  });
+
+  app.get([IDP_PATHS.SETTINGS], <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">req, res, next</span>) </span>{
+    res.render(<span class="hljs-string">'settings'</span>, {
+      <span class="hljs-attr">idp</span>: req.idp.options
+    });
+  });
+
+  app.post([IDP_PATHS.SETTINGS], <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">req, res, next</span>) </span>{
+    <span class="hljs-built_in">Object</span>.keys(req.body).forEach(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">key</span>) </span>{
+      <span class="hljs-keyword">switch</span>(req.body[key].toLowerCase()){
+        <span class="hljs-keyword">case</span> <span class="hljs-string">"true"</span>: <span class="hljs-keyword">case</span> <span class="hljs-string">"yes"</span>: <span class="hljs-keyword">case</span> <span class="hljs-string">"1"</span>:
+          req.idp.options[key] = <span class="hljs-literal">true</span>;
+          <span class="hljs-keyword">break</span>;
+        <span class="hljs-keyword">case</span> <span class="hljs-string">"false"</span>: <span class="hljs-keyword">case</span> <span class="hljs-string">"no"</span>: <span class="hljs-keyword">case</span> <span class="hljs-string">"0"</span>:
+          req.idp.options[key] = <span class="hljs-literal">false</span>;
+          <span class="hljs-keyword">break</span>;
+        <span class="hljs-keyword">default</span>:
+          req.idp.options[key] = req.body[key];
+          <span class="hljs-keyword">break</span>;
+      }
+
+      <span class="hljs-keyword">if</span> (req.body[key].match(<span class="hljs-regexp">/^\d+$/</span>)) {
+        req.idp.options[key] = <span class="hljs-built_in">parseInt</span>(req.body[key], <span class="hljs-string">'10'</span>);
+      }
+    });
+
+    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'Updated IdP Configuration =&gt; \n'</span>, req.idp.options);
+    res.redirect(<span class="hljs-string">'/'</span>);
+  });
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-19" id="section-19"></a>
+</div>
+<p>catch 404 and forward to error handler</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript">  app.use(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">req, res, next</span>) </span>{
+    <span class="hljs-keyword">const</span> err = <span class="hljs-keyword">new</span> <span class="hljs-built_in">Error</span>(<span class="hljs-string">'Route Not Found'</span>);
+    err.status = <span class="hljs-number">404</span>;
+    next(err);
+  });
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-20" id="section-20"></a>
+</div>
+<p>development error handler</p>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript">  app.use(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">err, req, res, next</span>) </span>{
+    <span class="hljs-keyword">if</span> (err) {
+      res.status(err.status || <span class="hljs-number">500</span>);
+      res.render(<span class="hljs-string">'error'</span>, {
+          <span class="hljs-attr">message</span>: err.message,
+          <span class="hljs-attr">error</span>: err
+      });
+    }
+  });
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-21" id="section-21"></a>
+</div>
+<div class="dox">
+<div class="summary">
+<p>Start IdP Web Server</p>
+</div>
+<div class="body">
+</div>
+</div>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript">
+  <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'starting idp server on port %s'</span>, app.get(<span class="hljs-string">'port'</span>));
+
+  httpServer.listen(app.get(<span class="hljs-string">'port'</span>), <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
+    <span class="hljs-keyword">const</span> scheme   = argv.https ? <span class="hljs-string">'https'</span> : <span class="hljs-string">'http'</span>,
+        address  = httpServer.address(),
+        hostname = os.hostname();
+        baseUrl  = address.address === <span class="hljs-string">'0.0.0.0'</span> || address.address === <span class="hljs-string">'::'</span> ?
+          scheme + <span class="hljs-string">'://'</span> + hostname + <span class="hljs-string">':'</span> + address.port :
+          scheme + <span class="hljs-string">'://localhost:'</span> + address.port;
+
+    <span class="hljs-built_in">console</span>.log();
+    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'SAML IdP Metadata URL: '</span>);
+    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'\t=&gt; '</span> + baseUrl + IDP_PATHS.METADATA);
+    <span class="hljs-built_in">console</span>.log();
+    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'SSO Bindings: '</span>);
+    <span class="hljs-built_in">console</span>.log();
+    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'\turn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST'</span>);
+    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'\t\t=&gt; '</span> + baseUrl + IDP_PATHS.SSO);
+    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'\turn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect'</span>);
+    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'\t\t=&gt; '</span> + baseUrl + IDP_PATHS.SSO);
+    <span class="hljs-built_in">console</span>.log();
+    <span class="hljs-keyword">if</span> (argv.sloUrl) {
+      <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'SLO Bindings: '</span>);
+      <span class="hljs-built_in">console</span>.log();
+      <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'\turn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST'</span>);
+      <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'\t\t=&gt; '</span> + baseUrl + IDP_PATHS.SLO);
+      <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'\turn:oasis:names:tc:SAML:2.0:bindings:HTTP-Redirect'</span>);
+      <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'\t\t=&gt; '</span> + baseUrl + IDP_PATHS.SLO);
+      <span class="hljs-built_in">console</span>.log();
+    }
+    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'idp server ready'</span>);
+    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'\t=&gt; '</span> + baseUrl);
+    <span class="hljs-built_in">console</span>.log();
+  });
+}
+
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">runServer</span>(<span class="hljs-params">options</span>) </span>{
+  <span class="hljs-keyword">const</span> args = processArgs([], options);
+  <span class="hljs-keyword">return</span> _runServer(args.argv);
+}
+
+<span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">main</span> (<span class="hljs-params"></span>) </span>{
+  <span class="hljs-keyword">const</span> args = processArgs(process.argv.slice(<span class="hljs-number">2</span>));
+  _runServer(args.argv);
+}
+
+<span class="hljs-built_in">module</span>.exports = {
+  runServer,
+  main,
+};
+
+<span class="hljs-keyword">if</span> (<span class="hljs-built_in">require</span>.main === <span class="hljs-built_in">module</span>) {
+  main();
+}
+
+</pre>
+        </td>
+      </tr>
+    
+  </tbody>
+</table>
+
+  </div>
+</body>
+</html>

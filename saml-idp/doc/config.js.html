@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>config.js</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <link rel="stylesheet" media="all" href="doc-style.css" />
+  <script src="doc-filelist.js"></script>
+  <script>
+    var relativeDir = "";
+    var thisFile = "config.js";
+    var defaultSidebar = true;
+  </script>
+  <script src="doc-script.js"></script>
+
+</head>
+<body>
+  <div id="sidebar_wrapper">
+    <div id="sidebar_switch">
+      <span class="tree">Files</span>
+      <span class="headings">Headings</span>
+    </div>
+    <div id="tree"></div>
+    <div id="headings">
+
+    </div>
+  </div>
+  <div id="sidebar-toggle"></div>
+  <div id="container">
+    <div class="background highlight"></div>
+<table cellpadding="0" cellspacing="0">
+  <tbody>
+    
+      <tr>
+        <td class="docs">
+          <h1>config.js</h1>
+        </td>
+        <td class="code highlight"></td>
+      </tr>
+    
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-1" id="section-1"></a>
+</div>
+<div class="dox">
+<div class="summary">
+<p>User Profile</p>
+</div>
+<div class="body">
+</div>
+</div>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript"><span class="hljs-keyword">var</span> profile = {
+  <span class="hljs-attr">userName</span>: <span class="hljs-string">'saml.jackson@example.com'</span>,
+  <span class="hljs-attr">nameIdFormat</span>: <span class="hljs-string">'urn:oasis:names:tc:SAML:1.1:nameid-format:emailAddress'</span>,
+  <span class="hljs-attr">firstName</span>: <span class="hljs-string">'Saml'</span>,
+  <span class="hljs-attr">lastName</span>: <span class="hljs-string">'Jackson'</span>,
+  <span class="hljs-attr">displayName</span>: <span class="hljs-string">'saml jackson'</span>,
+  <span class="hljs-attr">email</span>: <span class="hljs-string">'saml.jackson@example.com'</span>,
+  <span class="hljs-attr">mobilePhone</span>: <span class="hljs-string">'+1-415-555-5141'</span>,
+  <span class="hljs-attr">groups</span>: <span class="hljs-string">'Simple IdP Users, West Coast Users, Cloud Users'</span>
+}
+
+</pre>
+        </td>
+      </tr>
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-2" id="section-2"></a>
+</div>
+<div class="dox">
+<div class="summary">
+<p>SAML Attribute Metadata</p>
+</div>
+<div class="body">
+</div>
+</div>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript"><span class="hljs-keyword">var</span> metadata = [{
+  <span class="hljs-attr">id</span>: <span class="hljs-string">"firstName"</span>,
+  <span class="hljs-attr">optional</span>: <span class="hljs-literal">false</span>,
+  <span class="hljs-attr">displayName</span>: <span class="hljs-string">'First Name'</span>,
+  <span class="hljs-attr">description</span>: <span class="hljs-string">'The given name of the user'</span>,
+  <span class="hljs-attr">multiValue</span>: <span class="hljs-literal">false</span>
+}, {
+  <span class="hljs-attr">id</span>: <span class="hljs-string">"lastName"</span>,
+  <span class="hljs-attr">optional</span>: <span class="hljs-literal">false</span>,
+  <span class="hljs-attr">displayName</span>: <span class="hljs-string">'Last Name'</span>,
+  <span class="hljs-attr">description</span>: <span class="hljs-string">'The surname of the user'</span>,
+  <span class="hljs-attr">multiValue</span>: <span class="hljs-literal">false</span>
+}, {
+  <span class="hljs-attr">id</span>: <span class="hljs-string">"displayName"</span>,
+  <span class="hljs-attr">optional</span>: <span class="hljs-literal">true</span>,
+  <span class="hljs-attr">displayName</span>: <span class="hljs-string">'Display Name'</span>,
+  <span class="hljs-attr">description</span>: <span class="hljs-string">'The display name of the user'</span>,
+  <span class="hljs-attr">multiValue</span>: <span class="hljs-literal">false</span>
+}, {
+  <span class="hljs-attr">id</span>: <span class="hljs-string">"email"</span>,
+  <span class="hljs-attr">optional</span>: <span class="hljs-literal">false</span>,
+  <span class="hljs-attr">displayName</span>: <span class="hljs-string">'E-Mail Address'</span>,
+  <span class="hljs-attr">description</span>: <span class="hljs-string">'The e-mail address of the user'</span>,
+  <span class="hljs-attr">multiValue</span>: <span class="hljs-literal">false</span>
+},{
+  <span class="hljs-attr">id</span>: <span class="hljs-string">"mobilePhone"</span>,
+  <span class="hljs-attr">optional</span>: <span class="hljs-literal">true</span>,
+  <span class="hljs-attr">displayName</span>: <span class="hljs-string">'Mobile Phone'</span>,
+  <span class="hljs-attr">description</span>: <span class="hljs-string">'The mobile phone of the user'</span>,
+  <span class="hljs-attr">multiValue</span>: <span class="hljs-literal">false</span>
+}, {
+  <span class="hljs-attr">id</span>: <span class="hljs-string">"groups"</span>,
+  <span class="hljs-attr">optional</span>: <span class="hljs-literal">true</span>,
+  <span class="hljs-attr">displayName</span>: <span class="hljs-string">'Groups'</span>,
+  <span class="hljs-attr">description</span>: <span class="hljs-string">'Group memberships of the user'</span>,
+  <span class="hljs-attr">multiValue</span>: <span class="hljs-literal">true</span>
+}, {
+  <span class="hljs-attr">id</span>: <span class="hljs-string">"userType"</span>,
+  <span class="hljs-attr">optional</span>: <span class="hljs-literal">true</span>,
+  <span class="hljs-attr">displayName</span>: <span class="hljs-string">'User Type'</span>,
+  <span class="hljs-attr">description</span>: <span class="hljs-string">'The type of user'</span>,
+  <span class="hljs-attr">options</span>: [<span class="hljs-string">'Admin'</span>, <span class="hljs-string">'Editor'</span>, <span class="hljs-string">'Commenter'</span>]
+}];
+
+<span class="hljs-built_in">module</span>.exports = {
+  <span class="hljs-attr">user</span>: profile,
+  <span class="hljs-attr">metadata</span>: metadata
+}
+
+</pre>
+        </td>
+      </tr>
+    
+  </tbody>
+</table>
+
+  </div>
+</body>
+</html>

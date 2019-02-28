@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>simpleProfileMapper.js</title>
+  <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+  <link rel="stylesheet" media="all" href="../doc-style.css" />
+  <script src="../doc-filelist.js"></script>
+  <script>
+    var relativeDir = "../";
+    var thisFile = "lib/simpleProfileMapper.js";
+    var defaultSidebar = true;
+  </script>
+  <script src="../doc-script.js"></script>
+
+</head>
+<body>
+  <div id="sidebar_wrapper">
+    <div id="sidebar_switch">
+      <span class="tree">Files</span>
+      <span class="headings">Headings</span>
+    </div>
+    <div id="tree"></div>
+    <div id="headings">
+
+    </div>
+  </div>
+  <div id="sidebar-toggle"></div>
+  <div id="container">
+    <div class="background highlight"></div>
+<table cellpadding="0" cellspacing="0">
+  <tbody>
+    
+      <tr>
+        <td class="docs">
+          <h1>simpleProfileMapper.js</h1>
+        </td>
+        <td class="code highlight"></td>
+      </tr>
+    
+    
+      <tr>
+        <td class="docs">
+          <div class="pilwrap">
+  <a class="pilcrow" href="#section-1" id="section-1"></a>
+</div>
+
+        </td>
+        <td class="code highlight">
+          <pre class="javascript"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">SimpleProfileMapper</span> (<span class="hljs-params">pu</span>) </span>{
+  <span class="hljs-keyword">if</span>(!(<span class="hljs-keyword">this</span> <span class="hljs-keyword">instanceof</span> SimpleProfileMapper)) {
+    <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> SimpleProfileMapper(pu);
+  }
+  <span class="hljs-keyword">this</span>._pu = pu;
+}
+
+SimpleProfileMapper.prototype.getClaims = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
+  <span class="hljs-keyword">var</span> self = <span class="hljs-keyword">this</span>;
+  <span class="hljs-keyword">var</span> claims = {};
+
+  SimpleProfileMapper.prototype.metadata.forEach(<span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params">entry</span>) </span>{
+    claims[entry.id] = entry.multiValue ?
+      self._pu[entry.id].split(<span class="hljs-string">','</span>) :
+      self._pu[entry.id];
+  });
+
+  <span class="hljs-keyword">return</span> <span class="hljs-built_in">Object</span>.keys(claims).length &amp;&amp; claims;
+};
+
+SimpleProfileMapper.prototype.getNameIdentifier = <span class="hljs-function"><span class="hljs-keyword">function</span>(<span class="hljs-params"></span>) </span>{
+  <span class="hljs-keyword">return</span> {
+    <span class="hljs-attr">nameIdentifier</span>:                  <span class="hljs-keyword">this</span>._pu.userName,
+    <span class="hljs-attr">nameIdentifierFormat</span>:            <span class="hljs-keyword">this</span>._pu.nameIdFormat,
+    <span class="hljs-attr">nameIdentifierNameQualifier</span>:     <span class="hljs-keyword">this</span>._pu.nameIdNameQualifier,
+    <span class="hljs-attr">nameIdentifierSPNameQualifier</span>:   <span class="hljs-keyword">this</span>._pu.nameIdSPNameQualifier,
+    <span class="hljs-attr">nameIdentifierSPProvidedID</span>:      <span class="hljs-keyword">this</span>._pu.nameIdSPProvidedID
+  };
+};
+
+
+SimpleProfileMapper.prototype.metadata = [ {
+  <span class="hljs-attr">id</span>: <span class="hljs-string">"firstName"</span>,
+  <span class="hljs-attr">optional</span>: <span class="hljs-literal">false</span>,
+  <span class="hljs-attr">displayName</span>: <span class="hljs-string">'First Name'</span>,
+  <span class="hljs-attr">description</span>: <span class="hljs-string">'The given name of the user'</span>,
+  <span class="hljs-attr">multiValue</span>: <span class="hljs-literal">false</span>
+}, {
+  <span class="hljs-attr">id</span>: <span class="hljs-string">"lastName"</span>,
+  <span class="hljs-attr">optional</span>: <span class="hljs-literal">false</span>,
+  <span class="hljs-attr">displayName</span>: <span class="hljs-string">'Last Name'</span>,
+  <span class="hljs-attr">description</span>: <span class="hljs-string">'The surname of the user'</span>,
+  <span class="hljs-attr">multiValue</span>: <span class="hljs-literal">false</span>
+}, {
+  <span class="hljs-attr">id</span>: <span class="hljs-string">"displayName"</span>,
+  <span class="hljs-attr">optional</span>: <span class="hljs-literal">true</span>,
+  <span class="hljs-attr">displayName</span>: <span class="hljs-string">'Display Name'</span>,
+  <span class="hljs-attr">description</span>: <span class="hljs-string">'The display name of the user'</span>,
+  <span class="hljs-attr">multiValue</span>: <span class="hljs-literal">false</span>
+}, {
+  <span class="hljs-attr">id</span>: <span class="hljs-string">"email"</span>,
+  <span class="hljs-attr">optional</span>: <span class="hljs-literal">false</span>,
+  <span class="hljs-attr">displayName</span>: <span class="hljs-string">'E-Mail Address'</span>,
+  <span class="hljs-attr">description</span>: <span class="hljs-string">'The e-mail address of the user'</span>,
+  <span class="hljs-attr">multiValue</span>: <span class="hljs-literal">false</span>
+},{
+  <span class="hljs-attr">id</span>: <span class="hljs-string">"mobilePhone"</span>,
+  <span class="hljs-attr">optional</span>: <span class="hljs-literal">true</span>,
+  <span class="hljs-attr">displayName</span>: <span class="hljs-string">'Mobile Phone'</span>,
+  <span class="hljs-attr">description</span>: <span class="hljs-string">'The mobile phone of the user'</span>,
+  <span class="hljs-attr">multiValue</span>: <span class="hljs-literal">false</span>
+}, {
+  <span class="hljs-attr">id</span>: <span class="hljs-string">"groups"</span>,
+  <span class="hljs-attr">optional</span>: <span class="hljs-literal">true</span>,
+  <span class="hljs-attr">displayName</span>: <span class="hljs-string">'Groups'</span>,
+  <span class="hljs-attr">description</span>: <span class="hljs-string">'Group memberships of the user'</span>,
+  <span class="hljs-attr">multiValue</span>: <span class="hljs-literal">true</span>
+}];
+
+<span class="hljs-built_in">module</span>.exports = SimpleProfileMapper;
+</pre>
+        </td>
+      </tr>
+    
+  </tbody>
+</table>
+
+  </div>
+</body>
+</html>
